@@ -1,0 +1,12 @@
+12 ASIDE: CALLING L S E E K() DOES NOT PERFORM A DISK SEEK
+11 The poorly-named system call lseek() confuses many a student trying
+10 to understand disks and how the file systems atop them work. Do
+9 not confuse the two! The lseek() call simply changes a variable in OS
+8 memory that tracks, for a particular process, at which offset its next read
+7 or write will start. A disk seek occurs when a read or write issued to the
+6 disk is not on the same track as the last read or write, and thus necessitates
+5 a head movement. Making this even more confusing is the fact
+4 that calling lseek() to read or write from/to random parts of a file, and
+3 then reading/writing to those random parts, will indeed lead to more
+2 disk seeks. Thus, calling lseek() can lead to a seek in an upcoming
+1 read or write, but absolutely does not cause any disk I/O to occur itself.

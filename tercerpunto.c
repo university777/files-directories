@@ -1,88 +1,69 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-#define DEFLINES 10 
-#define LINES   100 
-#define MAXLEN  100 
-
-void error(char *);
-int mgetline(char *,int);
-
-int main(int argc,char *argv[])
+void tail(int lines, char *file_name)
 {
-    char *p;
-    char *buf;  
-    char *bufend;  
-    char line[MAXLEN];
-    char *lineptr[LINES];   
-    int first,i,last,len,n,nlines;
+      struct stat file;
+      int size = 0;
+      char *ch = NULL;
+      char *buf = NULL;
 
-    if( argc == 1)
-        n = DEFLINES;
-    else if(argc ==2 && (*++argv)[0] == '-')
-        n = atoi(argv[0]+1);
-    else
-        error("Usage: tail [-n]");
-    if( n < 1 || n > LINES)
-            n = LINES;
+      FILE *fd = fopen(file_name, "r");
 
-    for(i = 0; i < LINES; i++)
-            lineptr[i] = NULL;
+      if(fd == NULL)
+      {
+              printf("No fue posible abrir el archivo: %s\n", file_name);
+              return;
+      }
 
-    if(( p = buf = malloc(LINES * MAXLEN)) == NULL)
-        error("tail: cannot allocate buf");
-    bufend = buf + LINES + MAXLEN;
+      // Se ubica el puntero al final
+      fseek(fd, 0, SEEK_END);
+      // Se obtiene el tamaño del archivo
+      size = ftell(fd);
+      --size;
+      // Se asigna espacio en memoria al buffer que guardarà las lineas a imprimir
+      ch = (char *)malloc(2);
+      buf = (char *)malloc(80 * lines);
+      memset(buf, 0, 80 * lines);
+      char * start = buf;
+      *buf++ = '\0';
 
-    last = 0;
-    nlines = 0;
+      // Se copia el contenido del archivo en el buffer desde el final del archivo hacia arriba
+      // Se usa fseek --> SEEK_SET para navegar en el archivo desde atràs
 
-    while((len = mgetline(line,MAXLEN)) > 0)
-    {
-        if(p+len+1 >= bufend)
-            p = buf;
-        lineptr[last] = p;
+      while(size && lines)
+      {
+              --size;
+              fseek(fd, size , SEEK_SET);
+              fread(ch, 1, 1, fd);
+              *buf++ = *ch;
+              if(*ch == '\n')
+                      lines--;
+      }
+      fclose(fd);
 
-        strcpy(lineptr[last],line);
-        if(++last >= LINES)
-            last = 0;
+      // Se imprime el contenido del buffer
+      while( start != buf)
+              printf("%c", *buf--);
 
-        p += len + 1;
-        nlines++;
-    }
-
-    if( n > nlines)
-        n = nlines;
-
-    first = last - n;
-
-    if(first < 0)
-        first += LINES;
-    
-    for(i= first; n-- > 0;i = (i+1) % LINES)
-        printf("%s",lineptr[i]);
-
-    return 0;
+      printf("\n");
+      return;
 }
 
-void error(char *s)
+int main(int argc, char **argv)
 {
-    printf("%s\n",s);
-    exit(1);
-}
+      if(argc != 3)
+      {
+              printf("Ejecutar asì: ./mytail num_of_lines file_name \n");
+              return (-1);
+      }
 
-int mgetline(char s[],int lim)
-{
-    int c,i;
-    
-    for(i=0;i<lim-1 && (c=getchar())!=EOF && c!='\n';++i)
-        s[i] = c;
-    if ( c == '\n')
-    {
-        s[i] = c;
-        ++i;
-    }
-    
-    s[i] = '\0';
-    return i;
+      char *file = argv[2];
+      tail(atoi(argv[1]), file);
+
+      return 0;
 }
