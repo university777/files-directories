@@ -19,15 +19,12 @@ El Link count de un directorio se refiere a el número de enlaces que tiene ese 
 ![alt tag](https://github.com/university777/files-directories/blob/master/segundo_punto_con_parametros.JPG)  
 
 3. **Tail**: Escriba un programa que imprima una cuantas líneas al final de un archivo. El programa deberá ser eficiente, de manera que realice un *seek* para desplazarse cerca del final del archivo, realice una lectura de un bloque de datos y luego retroceda hasta encontrar el número de líneas solicitado; hasta este punto, el programa debería imprimir esas lineas desde el principio al final del archivo. Para invocar el programa, uno deberia digitar: ```mytail -n file```, donde ```n``` es el número de lineas al final del archivo a imprimir. Interfaces Útiles: ```stat()```, ```lseek()```, ```open()```, ```read()```, ```close()```.
+> En el siguiente ejemplo se tiene un archivo de 12 lineas y se le pide al programa imprimir las últimas 4 líneas:  
+![alt tag](https://github.com/university777/files-directories/blob/master/tercerpunto1.png)  
+Cuando se ingresa un número de líneas mayor a las del archivo, el programa simplemente imprime todo el archivo:  
+![alt tag](https://github.com/university777/files-directories/blob/master/tercerpunto2.png)  
 
-4. **Recursive Search**: Escriba un programa que imprima los nombres de cada archivo y directorio del árbol del sistema de archivos (*file system tree*), empezando en un punto dado del sistema de archivos en el árbol. Por ejemplo, cuando ejecute sin argumentos, el programa deberá empezar con el directorio de trabajo actual e imprimir su contenido, así como con los contenidos de cualquier subdirectorio en este, etc., hasta que el árbol entero, root en el CWD sea impreso. Si se da un único argumento (de un nombre de un directorio), use este como root en vez de él del sistema. Refine su busqueda recursiva con más opciones de busqueda divertidas, similar a la poderosa herramienta por línea de comandos ```find```. Interfaces Útiles: Resolverlo.  
-> archivo tercerpunto.c
 
 
-## Referencias de utilidad ##
 
-1. [Conceptos básicos claves resumidos](https://docs.google.com/document/d/1-336S7oKYwzSSSH-vzks8lGJ0R5VJoZu3PGBsz3vP2w/edit?usp=sharing)
-2. [Aspectos básicos de C](https://github.com/repos-SO-UdeA/lab3)
-3. [Manejo dinámico de memoria en C](https://github.com/repos-SO-UdeA/lab5)
-4. [Manejo de archivos en C](https://github.com/repos-SO-UdeA/lab6)
 
